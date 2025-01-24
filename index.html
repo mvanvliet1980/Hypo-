@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hypotheek Calculator</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <style>
+        input[type="range"] {
+            width: 100%;
+            height: 25px;
+            padding: 0;
+        }
+        .card {
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+            background: white;
+            border-radius: 0.5rem;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 p-4">
+    <div class="max-w-6xl mx-auto">
+        <div class="card p-6">
+            <h1 class="text-2xl font-bold mb-6">Hypotheek Calculator</h1>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Nieuwe Woning (Links) -->
+                <div class="space-y-4">
+                    <h2 class="text-lg font-semibold">Nieuwe Woning</h2>
+                    <div>
+                        <label class="block text-sm font-medium">Vraagprijs</label>
+                        <input 
+                            type="number" 
+                            id="vraagprijs" 
+                            value="587500" 
+                            class="w-full p-2 border rounded"
+                            step="5000"
+                        >
+                    </div>
+                    <div class="p-4 bg-blue-50 rounded">
+                        <p class="font-semibold">Huidige hypotheek</p>
+                        <p class="text-xl">€275.000</p>
+                        <p class="font-semibold mt-4">Nieuwe hypotheek na inbreng</p>
+                        <p class="text-2xl" id="nieuweHypotheek">€275.000</p>
+                        <p class="text-sm text-gray-600 mt-2" id="hypotheekVerschil">
+                            Verschil: €0
+                        </p>
+
+                        <!-- Rente instellingen -->
+                        <div class="mt-4 p-3 bg-white rounded shadow-sm">
+                            <p class="font-medium text-sm mb-2">Rente instellingen</p>
+                            <div class="text-sm">
+                                <p>Eerste €240.000: 1,6% (vast)</p>
+                                <label class="block mt-2">
+                                    Rente restant bedrag: <span id="renteLabel">4,0</span>%
+                                </label>
+                                <input
+                                    type="range"
+                                    id="renteSlider"
+                                    min="2"
+                                    max="6"
+                                    value="4.0"
+                                    step="0.1"
+                                    class="w-full mt-1"
+                                >
+                            </div>
+                        </div>
+
+                        <!-- Maandlasten -->
+                        <div class="mt-4 p-3 bg-white rounded shadow-sm">
+                            <p class="font-medium text-sm">Maandlasten (30 jaar annuïteit)</p>
+                            <div class="mt-2 space-y-1 text-sm">
+                                <div class="grid grid-cols-2 gap-2">
+                                    <div>
+                                        <p class="font-medium">Eerste €240.000:</p>
+                                        <p>Bruto: €<span id="brutoLaag">0</span></p>
+                                        <p>Netto: €<span id="nettoLaag">0</span></p>
+                                    </div>
+                                    <div>
+                                        <p class="font-medium">Restant bedrag:</p>
+                                        <p>Bruto: €<span id="brutoHoog">0</span></p>
+                                        <p>Netto: €<span id="nettoHoog">0</span></p>
+                                    </div>
+                                </div>
+                                <div class="mt-3 pt-3 border-t">
+                                    <p class="font-medium">Totaal per maand:</p>
+                                    <p>Bruto: €<span id="brutoTotaal">0</span></p>
+                                    <p>Netto: €<span id="nettoTotaal">0</span></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Oude Woning (Rechts) -->
+                <div class="space-y-4">
+                    <h2 class="text-lg font-semibold">Oude Woning</h2>
+                    <div class="space-y-2">
+                        <label class="block text-sm font-medium">
+                            Verkoopprijs: <span id="verkoopprijsLabel">€400.000</span>
+                        </label>
+                        <input
+                            type="range"
+                            id="verkoopprijs"
+                            min="350000"
+                            max="450000"
+                            value="400000"
+                            step="5000"
+                            class="w-full"
+                        >
+                        <div class="flex justify-between text-sm text-gray-500">
+                            <span>€350.000</span>
+                            <span>€450.000</span>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium">Huidige Hypotheek</label>
+                        <input
+                            type="number"
+                            id="huidigeHypotheek"
+                            value="275000"
+                            class="w-full p-2 border rounded"
+                            readonly
+                        >
+                    </div>
+
+                    <div class="space-y-2">
+                        <p class="font-medium">Kosten</p>
+                        <div class="grid grid-cols-2 gap-2 text-sm">
+                            <div>
+                                <label class="block">Overdracht</label>
+                                <input type="number" id="overdracht" value="11740" class="w-full p-1 border rounded">
+                            </div>
+                            <div>
+                                <label class="block">ELS</label>
+                                <input type="number" id="els" value="6000" class="w-full p-1 border rounded">
+                            </div>
+                            <div>
+                                <label class="block">Notaris</label>
+                                <input type="number" id="notaris" value="600" class="w-full p-1 border rounded">
+                            </div>
+                            <div>
+                                <label class="block">Taxatie</label>
+                                <input type="number" id="taxatie" value="475" class="w-full p-1 border rounded">
+                            </div>
+                            <div>
+                                <label class="block">Fin. Advies</label>
+                                <input type="number" id="finAdv" value="2500" class="w-full p-1 border rounded">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Resultaten -->
+            <div class="mt-8 p-4 bg-gray-50 rounded">
+                <h3 class="text-lg font-semibold mb-4">Resultaten</h3>
+                <div class="space-y-2">
+                    <p id="totaleKosten">Totale kosten: €21.315</p>
+                    <p id="beschikbaarInbreng">Beschikbaar voor inbreng: €103.685</p>
+                    <p id="effectHypotheek">Effect op hypotheek t.o.v. basis verkoopprijs: €0</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Annuïteit berekening
+        function berekenAnnuiteit(hoofdsom, rentePercentage, looptijdJaren) {
+            const rente = rentePercentage / 100 / 12;
+            const aantalTermijnen = looptijdJaren * 12;
+            if (rente === 0) return hoofdsom / aantalTermijnen;
+            
+            const annuiteit = hoofdsom * (rente * Math.pow(1 + rente, aantalTermijnen)) / 
+                            (Math.pow(1 + rente, aantalTermijnen) - 1);
+            return Math.round(annuiteit);
+        }
+
+        // Hoofdfunctie voor het berekenen van alle waardes
+        function berekenAlles() {
+            const vraagprijsNieuw = parseFloat(document.getElementById('vraagprijs').value);
+            const verkoopprijs = parseFloat(document.getElementById('verkoopprijs').value);
+            const huidigeHypotheek = parseFloat(document.getElementById('huidigeHypotheek').value);
+            const basisVerkoopprijs = 400000;
+            const renteHoog = parseFloat(document.getElementById('renteSlider').value);
+            
+            // Bereken alle kosten
+            const overdracht = parseFloat(document.getElementById('overdracht').value);
+            const els = parseFloat(document.getElementById('els').value);
+            const notaris = parseFloat(document.getElementById('notaris').value);
+            const taxatie = parseFloat(document.getElementById('taxatie').value);
+            const finAdv = parseFloat(document.getElementById('finAdv').value);
+            const totaleKosten = overdracht + els + notaris + taxatie + finAdv;
+            
+            // Bereken overwaarde en nieuwe hypotheek
+            const beschikbaarInbreng = verkoopprijs - huidigeHypotheek - totaleKosten;
+            const nieuweHypotheek = vraagprijsNieuw - beschikbaarInbreng;
+
+            // Bereken maandlasten
+            const laagDeel = Math.min(240000, nieuweHypotheek);
+            const hoogDeel = Math.max(0, nieuweHypotheek - 240000);
+            
+            const maandlastLaag = berekenAnnuiteit(laagDeel, 1.6, 30);
+            const maandlastHoog = berekenAnnuiteit(hoogDeel, renteHoog, 30);
+            
+            const renteLaag = (laagDeel * 0.016) / 12;
+            const renteHoogBedrag = (hoogDeel * (renteHoog/100)) / 12;
+            
+            const nettoRenteLaag = renteLaag * 0.4;
+            const nettoRenteHoog = renteHoogBedrag * 0.4;
+            
+            // Voor lage rente deel: aflossing blijft gelijk, alleen rente krijgt voordeel
+            const aflossingsDeelLaag = maandlastLaag - renteLaag;
+            const nettoMaandlastLaag = aflossingsDeelLaag + nettoRenteLaag;
+            
+            // Voor hoge rente deel: aflossing blijft gelijk, alleen rente krijgt voordeel
+            const aflossingsDeelHoog = maandlastHoog - renteHoogBedrag;
+            const nettoMaandlastHoog = aflossingsDeelHoog + nettoRenteHoog;
+
+            // Update UI
+            document.getElementById('verkoopprijsLabel').textContent = `€${verkoopprijs.toLocaleString()}`;
+            document.getElementById('totaleKosten').textContent = `Totale kosten: €${totaleKosten.toLocaleString()}`;
+            document.getElementById('beschikbaarInbreng').textContent = `Beschikbaar voor inbreng: €${beschikbaarInbreng.toLocaleString()}`;
+            document.getElementById('effectHypotheek').textContent = `Effect op hypotheek t.o.v. basis verkoopprijs: €${(verkoopprijs - basisVerkoopprijs).toLocaleString()}`;
+            document.getElementById('nieuweHypotheek').textContent = `€${nieuweHypotheek.toLocaleString()}`;
+            document.getElementById('hypotheekVerschil').textContent = `Verschil met huidige hypotheek: €${(nieuweHypotheek - huidigeHypotheek).toLocaleString()}`;
+            
+            // Update renteLabel
+            document.getElementById('renteLabel').textContent = renteHoog.toFixed(1);
+            
+            // Update maandlasten
+            document.getElementById('brutoLaag').textContent = maandlastLaag.toLocaleString();
+            document.getElementById('nettoLaag').textContent = Math.round(nettoMaandlastLaag).toLocaleString();
+            document.getElementById('brutoHoog').textContent = maandlastHoog.toLocaleString();
+            document.getElementById('nettoHoog').textContent = Math.round(nettoMaandlastHoog).toLocaleString();
+            document.getElementById('brutoTotaal').textContent = (maandlastLaag + maandlastHoog).toLocaleString();
+            document.getElementById('nettoTotaal').textContent = Math.round(nettoMaandlastLaag + nettoMaandlastHoog).toLocaleString();
+        }
+
+        // Event listeners voor alle inputs
+        document.getElementById('vraagprijs').addEventListener('input', berekenAlles);
+        document.getElementById('verkoopprijs').addEventListener('input', berekenAlles);
+        document.getElementById('overdracht').addEventListener('input', berekenAlles);
+        document.getElementById('els').addEventListener('input', berekenAlles);
+        document.getElementById('notaris').addEventListener('input', berekenAlles);
+        document.getElementById('taxatie').addEventListener('input', berekenAlles);
+        document.getElementById('finAdv').addEventListener('input', berekenAlles);
+        document.getElementById('renteSlider').addEventListener('input', berekenAlles);
+
+        // Initiële berekening
+        berekenAlles();
+    </script>
+</body>
+</html>
